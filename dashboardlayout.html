@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #5e66f5;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #f7f8fc;
+            padding: 20px 0;
+            border-right: 1px solid #eee;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .sidebar ul li:hover,
+        .sidebar ul li.active {
+            background: #eef1ff;
+            border-left: 4px solid #5e66f5;
+            color: #5e66f5;
+        }
+
+        .user-card {
+            margin: 10px;
+            /* moves the card outward */
+            padding: 10px;
+            /* optional: adds spacing inside the card */
+            border-radius: 8px;
+            /* optional: rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* optional: subtle shadow */
+        }
+
+        .user-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            /* makes image circular */
+            object-fit: cover;
+            /* keeps proportions */
+            margin-bottom: 10px;
+        }
+
+        .user-card .username {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .user-card .upgrade {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #ffe6eb;
+            /* light pink background */
+            color: #e75480;
+            /* pink text */
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 20px;
+            /* pill shape */
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 30px;
+            background-color: #f1f1f7;
+        }
+
+        .header-cards {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-card {
+            position: relative;
+            flex: 1;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 180px;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: left;
+        }
+
+        .dashboard-card .card-content .title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        .dashboard-card .card-content .value {
+            font-size: 1rem;
+
+        }
+
+        /* Add subtle background gradient for each card */
+        .dashboard-card.customers {
+            background: linear-gradient(135deg, #6a5acd, #836fff);
+        }
+
+        .dashboard-card.income {
+            background: linear-gradient(135deg, #4169e1, #6495ed);
+        }
+
+        .dashboard-card.products {
+            background: linear-gradient(135deg, #8a2be2, #a64ca6);
+        }
+
+        /* Optional icon in the corner */
+        .card-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+        }
+
+
+        .marketplace {
+            margin-top: 30px;
+        }
+
+        .marketplace .card {
+            border-radius: 12px;
+            border: none;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .recent-orders {
+            margin-top: 20px;
+        }
+
+        .summary {
+            width: 300px;
+            background: #fdfdfd;
+            border-left: 1px solid #eee;
+            padding: 30px;
+        }
+
+
+        .balance-card {
+            position: relative;
+            /* allows absolute child */
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .balance-action {
+            position: absolute;
+            top: 50%;
+            /* vertically centered */
+            right: -20px;
+            /* half outside the card */
+            transform: translateY(-50%);
+            /* adjust for exact centering */
+            background: red;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            /* round button */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .balance-action i {
+            font-size: 20px;
+        }
+
+
+        .summary .activity,
+        .summary .top-categories {
+            margin-top: 25px;
+        }
+
+        .category-card {
+            width: 140px;
+            height: 140px;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-card h6 {
+            margin-top: 12px;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: #1e2b50;
+        }
+
+        .category-card small {
+            color: #555;
+            font-size: 13px;
+        }
+
+        .category-card .icon {
+            margin-bottom: 5px;
+        }
+
+        /* Background variations */
+        .category-card.yellow {
+            background: #fff7d5;
+        }
+
+        .category-card.green {
+            background: #d5f5e3;
+        }
+
+
+        .logo {
+            display: flex;
+            /* put items in a row */
+            align-items: center;
+            /* vertically center icon + text */
+            font-size: 20px;
+            /* adjust text size */
+            font-weight: bold;
+            margin-left: 10px;
+            /* make it look stronger */
+        }
+
+        .logo img {
+            width: 50px;
+            /* smaller icon size */
+            height: auto;
+            /* keep proportions */
+            margin-right: 10px;
+
+            /* space between icon and text */
+        }
+
+        h6 {
+            font-size: 12px;
+        }
+
+        .icon-bg {
+            font-size: 20px;
+            /* adjust icon size */
+            color: #5e66f5;
+            /* icon color */
+            background: #eef1ff;
+            /* background color */
+            padding: 10px;
+            /* spacing around icon */
+            border-radius: 8px;
+            /* rounded background */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Circular Start Button */
+        .circular-btn {
+            width: 80px;
+            height: 80px;
+            border: 2px solid transparent;
+            border-top-color: #4a90e2;
+            /* blue border */
+            border-right-color: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a90e2;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .circular-btn span {
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar position-relative">
+            <div class="logo">
+                <img src="images/ozo-removebg-preview-removebg-preview.PNG" alt="Logo">
+                <span style="text-align:left">
+                    <h6>O2O <br> BRAND <br> PROTECTOR</h6>
+                </span>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item active">
+                    <i class="bi bi-speedometer2"></i> <b>SUMMARY</b>
+                </li>
+                <li class="nav-item">
+                    <i class="bi bi-cash-stack"></i> TRANSACTION
+                </li>
+                <li class="nav-item">
+                    <i class="bi bi-bar-chart-line"></i> STATISTICS
+                </li>
+                <li class="nav-item">
+                    <i class="bi bi-box-seam"></i> PRODUCT
+                </li>
+                <li class="nav-item">
+                    <i class="bi bi-tags"></i> CATEGORY
+                </li>
+            </ul>
+
+            <div class="user-card" style="margin: 10px;">
+                <img src="images/face.jpg" alt="user">
+                <div class="username">Sally Hawkins</div>
+                <div class="upgrade">UPGRADE</div>
+            </div>
+
+
+        </div>
+
+        <!-- Main content -->
+        <div class="main">
+            <div class="main d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0"><b>Business Dashboard</b></h5>
+                <div class="icons d-flex gap-2">
+                    <!-- Search Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.442 1.397a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
+                    </svg>
+
+                    <!-- Calendar Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-calendar-event" viewBox="0 0 16 16">
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1zm2.5 2a.5.5 0 0 1 .5.5V8h2V6.5a.5.5 0 0 1 1 0V8h2V6.5a.5.5 0 0 1 1 0V8h2V6.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1H14v2a.5.5 0 0 1-1 0V9h-2v2a.5.5 0 0 1-1 0V9H8v2a.5.5 0 0 1-1 0V9H5v2a.5.5 0 0 1-1 0V9H3.5a.5.5 0 0 1 0-1H4V6.5a.5.5 0 0 1 .5-.5z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="header-cards">
+                <div class="card dashboard-card customers">
+                    <div class="card-content">
+                        <div class="title">CUSTOMERS</div>
+                        <div class="value">54,235</div>
+                    </div>
+                    <div class="card-icon">👤</div>
+                </div>
+
+                <div class="card dashboard-card income">
+                    <div class="card-content">
+                        <div class="title">INCOME</div>
+                        <div class="value">$980,632</div>
+                    </div>
+                    <div class="card-icon">💰</div>
+                </div>
+
+                <div class="card dashboard-card products">
+                    <div class="card-content">
+                        <div class="title">PRODUCTS SOLD</div>
+                        <div class="value">5,490</div>
+                    </div>
+                    <div class="card-icon">📦</div>
+                </div>
+            </div>
+
+
+
+
+            <div class="marketplace row mt-4">
+                <h6><b>Market Place</b></h6>
+                <div class="col-md-8">
+                    <div class="card">
+                        <h6><b>Data Analytics Overview</b></h6>
+                        <p class="text-muted small">See how your account grow and how you can boost it.</p>
+                        <div class="circular-btn">
+                            <span>START</span>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <h6><b>Finance Flow</b></h6>
+                        <h4>$2,530</h4>
+                        <p class="text-muted small">September 2021</p>
+                        <canvas id="financeChart" height="50"></canvas>
+                     
+                    </div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <div class="col-md-4"> <!-- 1/3 width on md screens -->
+                    <div class="card text-center p-3"
+                        style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
+                        <h6><b>UPGRADE TO PRO</b></h6>
+                        <img src="images/handbag.JPG" width="90" height="90" class="my-3 mx-auto">
+                        <h4>$29 p/m</h4>
+                        <p class="text-muted small">100% insurance for your goods</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="recent-orders mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0"><b>Recent Orders</b></h6>
+                    <h6 class="mb-0 text-primary" style="cursor:pointer;">See All</h6>
+                </div>
+                <table class="table table-sm">
+
+                    <tbody>
+                        <tr>
+                            <td>#1235465</td>
+                            <td>DJI Mavic Pro 2</td>
+                            <td>Sep 16, 2021</td>
+                            <td>$42.00</td>
+                            <td class="text-success">Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>#1235468</td>
+                            <td>iPad Pro 2017 Model</td>
+                            <td>Sep 15, 2021</td>
+                            <td>$932.00</td>
+                            <td class="text-danger">Canceled</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h3><b>Summary</b></h3>
+            <div class="balance-card d-flex justify-content-between align-items-center">
+                <div>
+                    <p>Your Balance <span style="margin-left:40px;">:</span></p>
+                    <h3>$10,632.00</h3>
+                    <div class="d-flex gap-3">
+                        <small class="text-success">
+                            <i class="bi bi-arrow-up"></i> $3,250.07
+                        </small>
+                        <small class="text-danger">
+                            <i class="bi bi-arrow-down"></i> $1,062.90
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Plus button -->
+                <div class="balance-action">
+                    <i class="bi bi-plus"></i>
+                </div>
+            </div>
+
+            <div class="activity">
+                <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1">
+                    <h6 class="mb-0">Activity</h6>
+                    <h6 class="mb-0 text-primary" style="cursor:pointer;">See All</h6>
+                </div>
+
+                <!-- Withdraw Earning -->
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="text-center w-100">
+                        <h6 class="mb-0">
+                            <i class="bi bi-calendar-event icon-bg me-2 text-primary "></i> Withdraw Earning
+                        </h6>
+                        <small class="text-muted d-block">12:40 am</small>
+                    </div>
+                    <span style="font-size:12px;" class="text-success ms-auto">$4,120</span>
+                </div>
+
+                <br>
+
+                <!-- Paying Website Tax -->
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="text-center w-100">
+                        <h6 class="mb-0">
+                            <i class="bi bi-calendar-event icon-bg me-2 text-primary"></i> Paying Website tax
+                        </h6>
+                        <small class="text-muted d-block">10:20 am</small>
+                    </div>
+                    <span style="font-size:12px;" class="text-danger ms-auto">-$230</span>
+                </div>
+            </div>
+
+
+
+            <div class="top-categories">
+                <h6><b>Top Categories</b></h6>
+                <p class="text-muted small">Explore your top categories and keep shopping with cashback</p>
+                <div class="d-flex gap-3">
+                    <!-- Footwear -->
+                    <div class="category-card yellow">
+                        <div class="icon">
+                            <!-- Shoe prints SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#f7b500"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M7 3c-1.657 0-3 1.343-3 3 0 2 3 7 3 7s3-5 3-7c0-1.657-1.343-3-3-3zm10 0c-1.657 0-3 1.343-3 3 0 2 3 7 3 7s3-5 3-7c0-1.657-1.343-3-3-3z" />
+                            </svg>
+                        </div>
+                        <h6><b>Footwear</b></h6>
+                        <small>18 941 units</small>
+                    </div>
+
+                    <!-- Accessories -->
+                    <div class="category-card green">
+                        <div class="icon">
+                            <!-- Glove SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#28a745"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M16 2c-1.105 0-2 .895-2 2v4h-1V4c0-1.105-.895-2-2-2s-2 .895-2 2v6H8V6c0-1.105-.895-2-2-2s-2 .895-2 2v9c0 4.418 3.582 8 8 8h2c4.418 0 8-3.582 8-8V4c0-1.105-.895-2-2-2s-2 .895-2 2v4h-2V4c0-1.105-.895-2-2-2z" />
+                            </svg>
+                        </div>
+                        <h6><b>Accessories</b></h6>
+                        <small>26 061 units</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+<script>
+/* Finance Flow Chart */
+const ctx = document.getElementById('financeChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ["1","2","3","4","5","6","7","8","9","10"],
+        datasets: [{
+            data: [3,4,3,6,8,7,9,8,7,9],
+            backgroundColor: "#a3b2f3",
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { display: false },
+            y: { display: false }
+        }
+    }
+});
+</script>
+</body>
+
+</html>
